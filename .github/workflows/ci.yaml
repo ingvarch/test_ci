@@ -74,18 +74,16 @@ jobs:
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
 
-      - name: Set default inputs if not workflow_dispatch
+      - name: Set default inputs
         run: |
-          if [[ "${{ github.event_name }}" != "workflow_dispatch" ]]; then
-            echo "Setting default values for architectures and image_repo"
-            echo "architectures=amd64" >> $GITHUB_ENV
-            echo "image_repo=510061785511.dkr.ecr.eu-north-1.amazonaws.com/hurma" >> $GITHUB_ENV
-          fi
+          # Set default values for architectures and image_repo
+          echo "architectures=${{ github.event.inputs.architectures || 'amd64' }}" >> $GITHUB_ENV
+          echo "image_repo=${{ github.event.inputs.image_repo || '510061785511.dkr.ecr.eu-north-1.amazonaws.com/hurma' }}" >> $GITHUB_ENV
 
       - name: Generate matrix JSON
         id: set_matrix
         run: |
-          input_archs="${{ env.architectures || github.event.inputs.architectures }}"
+          input_archs="${{ env.architectures }}"
           json_output=$(echo "$input_archs" | jq -R 'split(",") | map({arch: ., platform: ("linux/" + .)}) | {include: .}')
           echo "Generated JSON: $json_output"
           echo "matrix_json=$(echo "$json_output" | jq -c)" >> $GITHUB_OUTPUT
@@ -144,3 +142,4 @@ jobs:
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
