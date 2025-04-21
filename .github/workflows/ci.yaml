@@ -79,7 +79,7 @@ jobs:
           input_archs="${{ github.event.inputs.architectures }}"
           json_output=$(echo "$input_archs" | jq -R 'split(",") | map({arch: ., platform: ("linux/" + .)}) | {include: .}')
           echo "Generated JSON: $json_output"
-          echo "matrix_json=$json_output" >> $GITHUB_OUTPUT
+          echo "matrix_json=$(echo "$json_output" | jq -c)" >> $GITHUB_OUTPUT
 
   build_and_push:
     name: Build and push Docker images
@@ -135,3 +135,4 @@ jobs:
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
