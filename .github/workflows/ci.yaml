@@ -125,7 +125,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ github.event.inputs.image_repo }}
+          images: "${{ env.image_repo || github.event.inputs.image_repo }}"
           tags: |
             type=ref,event=branch
             type=ref,event=pr
