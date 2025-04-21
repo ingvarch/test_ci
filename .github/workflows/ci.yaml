@@ -86,12 +86,13 @@ jobs:
           
           echo "dockerfile=$DOCKERFILE" >> $GITHUB_OUTPUT
           echo "image_repo=$IMAGE_REPO" >> $GITHUB_OUTPUT
-          echo "architectures=$ARCHITECTURES" >> $GITHUB_ENV
+          echo "architectures=$ARCHITECTURES" >> $GITHUB_OUTPUT
 
       - name: Generate matrix JSON
         id: set_matrix
         run: |
-          input_archs="${{ env.architectures }}"
+          
+          input_archs="${{ steps.set_defaults.outputs.architectures }}"
           json_output=$(echo "$input_archs" | jq -R 'split(",") | map({arch: ., platform: ("linux/" + .)}) | {include: .}')
           echo "Generated JSON: $json_output"
           echo "matrix_json=$(echo "$json_output" | jq -c)" >> $GITHUB_OUTPUT
@@ -136,7 +137,6 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
             type=sha
 
       - name: Build and push Docker image
@@ -150,4 +150,3 @@ jobs:
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
