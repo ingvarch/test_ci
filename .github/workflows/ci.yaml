@@ -15,7 +15,7 @@ on:
       image_repo:
         description: 'ECR image repository name'
         required: false
-        default: '123456789012.dkr.ecr.us-east-1.amazonaws.com/my-app'
+        default: '510061785511.dkr.ecr.eu-north-1.amazonaws.com/hurma'
       architectures:
         description: 'Target architectures (comma-separated without spaces)'
         required: false
