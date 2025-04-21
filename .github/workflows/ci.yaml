@@ -69,7 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     outputs:
-      matrix_arch: ${{ steps.set_matrix.outputs.matrix_json }}
+      matrix_arch: ${{ steps.set_matrix.outputs.matrix_list }}
       image_repo: ${{ steps.set_defaults.outputs.image_repo }}
       dockerfile: ${{ steps.set_defaults.outputs.dockerfile }}
     steps:
@@ -91,8 +91,8 @@ jobs:
       - name: Generate matrix JSON
         id: set_matrix
         run: |
-          matrix_json=$(echo "${{ steps.set_defaults.outputs.architectures }}" | jq -Rc 'split(",")')
-          echo "matrix_json=${matrix_json}" >> $GITHUB_OUTPUT
+          arch_list=$(echo "${{ steps.set_defaults.outputs.architectures }}" | jq -Rc 'split(",")')
+          echo "matrix_list=${arch_list}" >> $GITHUB_OUTPUT
 
   build_and_push:
     name: Build and push Docker images for ${{ matrix.arch }}
