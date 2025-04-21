@@ -92,7 +92,7 @@ jobs:
         id: set_matrix
         run: |
           matrix_json=$(echo "${{ steps.set_defaults.outputs.architectures }}" | jq -Rc 'split(",")')
-          echo "matrix_json=matrix_json" >> $GITHUB_OUTPUT
+          echo "matrix_json=${matrix_json}" >> $GITHUB_OUTPUT
 
   build_and_push:
     name: Build and push Docker images for ${{ matrix.arch }}
